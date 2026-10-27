@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Accessify</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%234f46e5'/%3E%3Ccircle cx='16' cy='9' r='3' fill='white'/%3E%3Cpath d='M8 13h16M16 13v7m0 0l-4 6m4-6l4 6' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body data-state="idle">
+  <a class="skip" href="#main">Skip to results</a>
+
+  <header class="top">
+    <div class="wrap topin">
+      <div class="brand">
+        <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/><circle cx="16" cy="9" r="3" fill="#fff"/><path d="M8 13h16M16 13v7m0 0l-4 6m4-6l4 6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+        <span class="name">Accessify</span>
+        <span class="target" id="targetChip" hidden></span>
+      </div>
+      <div class="conns">
+        <button type="button" class="conn" id="connGemini" data-open-settings><i class="pip"></i><span>Gemini</span></button>
+        <button type="button" class="conn" id="connGithub" data-open-settings><i class="pip"></i><span>GitHub</span></button>
+        <button type="button" class="btn soft sm" id="newRun" hidden>New run</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HOME ============ -->
+  <section class="hero wrap" id="hero" aria-labelledby="h-start">
+    <h1 id="h-start">Fix accessibility bugs,<br><em>and watch them change.</em></h1>
+    <p class="lede">Point Accessify at a live website, a GitHub repo or a folder. It finds the problems, fixes them with Gemini and rule-based fixers, proves each fix with a re-scan, and lets you review every change before anything ships.</p>
+    <form id="runbar" class="runbar" aria-label="Run Accessify">
+      <label for="target" class="sr">Folder path or GitHub repository URL</label>
+      <div class="field">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h3l1.5 2h6.5A1.5 1.5 0 0 1 17 7.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <input id="target" type="text" placeholder="A website URL, a GitHub repo, or a local folder" autocomplete="off">
+      </div>
+      <button type="submit" class="btn primary lg" id="runOwn">Scan &amp; fix</button>
+      <button type="button" class="btn soft lg" id="runDemo">Try the demo site</button>
+    </form>
+    <p id="err" class="err" role="alert" hidden></p>
+    <ul class="feats">
+      <li><b>Any website or codebase</b><span>Live sites (even <code>localhost:3000</code>) get a drop-in fix script. Repos and folders get real source edits and a PR, including <code>.jsx .tsx .vue .svelte .php</code> and more.</span></li>
+      <li><b>Gemini + rules</b><span>Gemini reads images and writes names and titles. Deterministic fixers handle contrast, lang, viewport and focus.</span></li>
+      <li><b>You stay in control</b><span>Watch each fix morph from before to after, edit or exclude any of them, then raise the PR.</span></li>
+    </ul>
+  </section>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="wrap app" id="app" hidden>
+    <aside class="rail" aria-label="Run status">
+      <section class="card runcard" aria-live="polite">
+        <div class="now">
+          <span class="spin" id="spin" aria-hidden="true"></span>
+          <span class="check" id="doneIcon" aria-hidden="true" hidden>✓</span>
+          <div class="nowtx"><b id="nowTitle">Starting…</b><span id="nowSub">Getting things ready</span></div>
+        </div>
+        <div class="meta"><span id="roundChip" class="chip" hidden></span><span class="time" id="clock">0:00</span></div>
+        <ol id="steps" class="steps" aria-label="Pipeline">
+          <li data-p="setup"><span class="n"><i>1</i></span><div><b>Setup</b><small>Clone &amp; serve</small></div></li>
+          <li data-p="scan"><span class="n"><i>2</i></span><div><b>Scan</b><small>Pages &amp; source files</small></div></li>
+          <li data-p="fix"><span class="n"><i>3</i></span><div><b>Fix</b><small>Gemini + rules</small></div></li>
+          <li data-p="retest"><span class="n"><i>4</i></span><div><b>Re-test</b><small>Prove each fix</small></div></li>
+          <li data-p="review"><span class="n"><i>5</i></span><div><b>Review</b><small>Your edits</small></div></li>
+          <li data-p="pr"><span class="n"><i>6</i></span><div><b id="step6">Pull request</b><small id="step6s">Push &amp; open</small></div></li>
+        </ol>
+        <div class="bar" role="progressbar" aria-label="Overall progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="barFill"></i></div>
+      </section>
+
+      <section class="card scorecard" aria-label="Score">
+        <div class="gauge" aria-hidden="true">
+          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="track"/><circle id="arc" cx="60" cy="60" r="52" class="arc" pathLength="100" stroke-dasharray="0 100"/></svg>
+          <div class="num"><span id="scoreNum">–</span><small>score</small></div>
+        </div>
+        <p id="scoreLine" class="scoreline">Waiting for the first scan</p>
+        <div class="tiles">
+          <div class="tile"><b id="tFound">0</b><span>Found</span></div>
+          <div class="tile good"><b id="tFixed">0</b><span>Fixed</span></div>
+          <div class="tile warn"><b id="tManual">0</b><span>Need you</span></div>
+          <div class="tile bad"><b id="tFail">0</b><span>Failed</span></div>
+        </div>
+      </section>
+    </aside>
+
+    <main id="main" class="main" tabindex="-1">
+      <section class="card tabs">
+        <div role="tablist" aria-label="Results" class="tablist">
+          <button role="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3h6v6H3zM11 3h6v4h-6zM11 9h6v8h-6zM3 11h6v6H3z"/></svg>Overview</button>
+          <button role="tab" id="tab-issues" aria-controls="panel-issues" aria-selected="false" tabindex="-1"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>Changes<span class="count" id="cIssues" hidden>0</span></button>
+          <button role="tab" id="tab-shots" aria-controls="panel-shots" aria-selected="false" tabindex="-1"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M10 4v12"/></svg>Before / after<i class="ready" id="rShots" hidden></i></button>
+          <button role="tab" id="tab-diff" aria-controls="panel-diff" aria-selected="false" tabindex="-1"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4L3 10l4 6M13 4l4 6-4 6"/></svg>Code<i class="ready" id="rDiff" hidden></i></button>
+          <button role="tab" id="tab-sr" aria-controls="panel-sr" aria-selected="false" tabindex="-1"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 8v4h3l4 3V5L7 8zM14 7a4 4 0 0 1 0 6"/></svg>Screen reader<i class="ready" id="rSr" hidden></i></button>
+          <button role="tab" id="tab-pr" aria-controls="panel-pr" aria-selected="false" tabindex="-1"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="15" r="2"/><circle cx="14" cy="15" r="2"/><path d="M6 7v6M14 13V8a3 3 0 0 0-3-3H9"/></svg>Pull request<i class="ready" id="rPr" hidden></i></button>
+          <button role="tab" id="tab-feed" aria-controls="panel-feed" aria-selected="false" tabindex="-1"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h3l2-5 4 10 2-5h3"/></svg>Activity</button>
+        </div>
+
+        <!-- Overview -->
+        <div role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
+          <div class="ovtop">
+            <div class="mixcard">
+              <h3 class="h3">Who made the fixes</h3>
+              <div class="mixbar" id="mixBar" aria-hidden="true"></div>
+              <ul class="legend" id="mixLegend"><li class="empty">Fixes appear here as the agent works.</li></ul>
+            </div>
+            <div class="mixcard">
+              <h3 class="h3">Where the problems were</h3>
+              <ul id="ruleBars" class="bars rules"><li class="empty">Rules show up after the scan.</li></ul>
+            </div>
+          </div>
+          <div class="ov">
+            <div class="ovcol">
+              <h3 class="h3">Live page view</h3>
+              <figure class="live" id="live">
+                <div class="browser"><i></i><i></i><i></i><span id="liveName">no page yet</span></div>
+                <div class="shot" id="liveShot"><div class="ph"><span class="spin lg" id="liveSpin" hidden></span><p id="liveMsg">Pages appear here as the agent scans them.</p></div><img id="liveImg" alt="Latest scanned page" hidden></div>
+              </figure>
+            </div>
+            <div class="ovcol">
+              <h3 class="h3">Score by page or file</h3>
+              <ul id="pageBars" class="bars"><li class="empty">Nothing scanned yet.</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Changes -->
+        <div role="tabpanel" id="panel-issues" aria-labelledby="tab-issues" hidden>
+          <p class="hint" id="editHint" hidden>Every fix shows the source line <b>before</b> and <b>after</b>. Open a card to edit its value, or switch it off to leave it out. Then press <b>Re-verify changes</b>: everything is re-applied from your original source and re-scanned.</p>
+          <div class="toolbar">
+            <div class="filters" role="group" aria-label="Filter issues">
+              <button class="fchip on" data-f="all" aria-pressed="true">All <b id="fAll">0</b></button>
+              <button class="fchip" data-f="open" aria-pressed="false">In progress <b id="fOpen">0</b></button>
+              <button class="fchip" data-f="verified" aria-pressed="false">Verified <b id="fVerified">0</b></button>
+              <button class="fchip" data-f="manual" aria-pressed="false">Needs you <b id="fManual">0</b></button>
+              <button class="fchip" data-f="failed" aria-pressed="false">Failed <b id="fFailed">0</b></button>
+              <button class="fchip" data-f="excluded" aria-pressed="false">Excluded <b id="fExcluded">0</b></button>
+              <button class="fchip" data-f="check" aria-pressed="false">Worth a look <b id="fCheck">0</b></button>
+            </div>
+          </div>
+          <div class="toolbar">
+            <div class="field sm"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input id="q" type="search" placeholder="Search rule, file or fix" aria-label="Search issues"></div>
+            <div class="seg" role="group" aria-label="Group issues by">
+              <span>Group</span>
+              <button data-g="file" aria-pressed="true">File</button>
+              <button data-g="rule" aria-pressed="false">Rule</button>
+              <button data-g="impact" aria-pressed="false">Impact</button>
+            </div>
+            <button class="btn soft sm" id="playAll" type="button">▶ Replay changes</button>
+          </div>
+          <div id="issues" class="issues" tabindex="0" aria-label="Changes list"><p class="empty">No issues yet.</p></div>
+        </div>
+
+        <!-- Before / after -->
+        <div role="tabpanel" id="panel-shots" aria-labelledby="tab-shots" hidden>
+          <div class="toolbar">
+            <div class="row"><label for="pageSel" class="lab2">Page</label><select id="pageSel"></select><span id="shotScores" class="scorepill"></span></div>
+            <div class="row">
+              <div class="seg" role="group" aria-label="Comparison mode">
+                <button data-m="slide" aria-pressed="true">Slide</button>
+                <button data-m="side" aria-pressed="false">Side by side</button>
+                <button data-m="blink" aria-pressed="false">Blink</button>
+              </div>
+              <button class="btn soft sm" id="playSweep" type="button">▶ Play</button>
+            </div>
+          </div>
+          <div id="baStage" hidden>
+            <div id="cmp" class="cmp" tabindex="0" aria-label="Page screenshot comparison">
+              <div class="stack" id="stack">
+                <img id="imgAfter" alt="Page after fixes, remaining issues outlined in red">
+                <div id="beforeWrap"><img id="imgBefore" alt="Page before fixes, every violating element outlined in red"></div>
+                <div class="pins" id="pins"></div>
+                <span class="lab l" id="labL">Before</span><span class="lab r" id="labR">After</span>
+              </div>
+            </div>
+            <div id="sliderRow" class="sliderRow"><label for="slider">Drag to compare</label><input id="slider" type="range" min="0" max="100" value="50"></div>
+            <p class="legend2"><i class="k red"></i>problem found <i class="k green"></i>element Accessify changed (hover a pin for the source change)</p>
+          </div>
+          <div id="baStatic" class="emptybox" hidden><b></b><p>This is a source file, so there is no rendered page to compare. Here is every change, line by line.</p></div>
+          <div id="baList" class="balist"></div>
+          <div class="emptybox" id="shotEmpty"><b>Before / after</b><p>Screenshots, pins on every changed element and a sliding comparison appear when the run finishes.</p></div>
+        </div>
+
+        <!-- Code -->
+        <div role="tabpanel" id="panel-diff" aria-labelledby="tab-diff" hidden>
+          <div class="toolbar"><span id="diffMeta" class="muted"></span><a id="dl" class="btn soft sm" href="#" hidden download>Download .patch</a></div>
+          <div id="diff" class="diff" hidden></div>
+          <div class="emptybox" id="diffEmpty"><b>Code</b><p>The exact source edits, file by file. They update when you change a fix.</p></div>
+        </div>
+
+        <!-- Screen reader -->
+        <div role="tabpanel" id="panel-sr" aria-labelledby="tab-sr" hidden>
+          <div class="toolbar">
+            <div class="row"><label for="srSel" class="lab2">Page</label><select id="srSel"></select></div>
+            <div class="row">
+              <div class="seg" role="group" aria-label="Transcript view">
+                <button data-s="changes" aria-pressed="true">Changes</button>
+                <button data-s="before" aria-pressed="false">Before</button>
+                <button data-s="after" aria-pressed="false">After</button>
+              </div>
+              <button class="btn soft sm" id="srHear" type="button">🔊 Hear it</button>
+            </div>
+          </div>
+          <p class="hint" id="srHint">What a screen reader announces, in reading order. Unlabeled controls are read as just “button” or “link”.</p>
+          <ol id="srOut" class="spk" tabindex="0" aria-label="Screen reader transcript" hidden></ol>
+          <div class="emptybox" id="srEmpty"><b>Screen reader transcript</b><p>Watch unlabeled controls turn into named ones. Available when the run finishes (rendered pages only).</p></div>
+        </div>
+
+        <!-- Pull request -->
+        <div role="tabpanel" id="panel-pr" aria-labelledby="tab-pr" hidden>
+          <div class="emptybox" id="prEmpty"><b>Pull request</b><p>Once the fixes are ready you can edit the title and description here, then raise the PR.</p></div>
+          <div id="shipForm" hidden>
+            <div class="shipgrid">
+              <div class="shipcard main">
+                <span class="tagline">Recommended</span>
+                <h3>Drop-in fix script</h3>
+                <p>One file that applies every verified fix to your live pages: alt text, labels, titles, language, focus order and colour fixes.</p>
+                <a class="btn primary" id="dlScript" href="#" download>Download accessify-fixes.js</a>
+                <div class="snip"><code id="snipCode">&lt;script src="/accessify-fixes.js" defer&gt;&lt;/script&gt;</code><button class="linkbtn" id="copySnip" type="button">Copy</button></div>
+                <p class="small" id="shipStats"></p>
+              </div>
+              <div class="shipcard"><h3>Patch</h3><p>Every edit as a diff against the rendered copy of each page. Useful as a checklist for your own source.</p><a class="btn soft sm" id="dlPatch2" href="#" download>Download .patch</a></div>
+              <div class="shipcard"><h3>Report</h3><p>Score before and after, every fix and everything that still needs a person.</p><a class="btn soft sm" id="dlReport" href="#" download>Download report</a></div>
+            </div>
+            <ol class="how">
+              <li><b>Download</b> <code>accessify-fixes.js</code> and host it on your site, for example at <code>/accessify-fixes.js</code>.</li>
+              <li><b>Add the script tag</b> shown above before <code>&lt;/body&gt;</code> on every page (or in your layout).</li>
+              <li><b>Re-run Accessify</b> on the live URL to confirm the score moved.</li>
+            </ol>
+            <p class="hint">A website has no repository to open a pull request against. For permanent fixes in your code, run Accessify on the repo or folder: you get real source edits and a PR.</p>
+          </div>
+          <div id="prForm" hidden>
+            <div id="prDone" class="prDone" hidden></div>
+            <div id="prErr" class="err" role="alert" hidden></div>
+            <div class="formgrid">
+              <div class="f full" id="repoRow">
+                <label for="prRepo">Repository to raise the PR against</label>
+                <input id="prRepo" type="text" placeholder="owner/repo or https://github.com/owner/repo" autocomplete="off">
+                <small id="repoHint">Needed because you scanned a local folder. The reviewed patch is applied to that repo's default branch.</small>
+              </div>
+              <div class="f full"><label for="prTitle">Title</label><input id="prTitle" type="text"></div>
+              <div class="f"><label for="prBranch">Branch</label><input id="prBranch" type="text" spellcheck="false"></div>
+              <div class="f"><label>Target</label><div class="static" id="prTarget">–</div></div>
+              <div class="f full"><label for="prBodyEdit">Description <button type="button" class="linkbtn" id="prReset">Reset to generated</button></label><textarea id="prBodyEdit" rows="16" spellcheck="false"></textarea></div>
+            </div>
+            <ul class="checks" id="prChecks"></ul>
+            <div class="prActions">
+              <button class="btn primary lg" id="raise" type="button">Raise pull request</button>
+              <span class="muted" id="raiseNote"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity -->
+        <div role="tabpanel" id="panel-feed" aria-labelledby="tab-feed" hidden>
+          <div class="toolbar"><span class="muted">Everything the agent did, with timestamps.</span><button class="linkbtn" id="feedAll" aria-pressed="false">Show low-level lines</button></div>
+          <div id="log" class="feed" role="log" aria-live="off" tabindex="0"><p class="empty">Nothing running yet.</p></div>
+        </div>
+      </section>
+
+      <div class="reviewbar" id="reviewbar" hidden role="region" aria-label="Review actions">
+        <div class="rb-stats"><b id="rbN">0</b> <span id="rbLabel" style="color:inherit;font-weight:400;margin:0">fixes in the PR</span> <span id="rbEdited"></span></div>
+        <div class="rb-btns">
+          <button class="btn soft" id="reverify" type="button" disabled>Re-verify changes</button>
+          <button class="btn primary" id="toPr" type="button">Review pull request →</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ SETTINGS ============ -->
+  <dialog id="settings" aria-labelledby="h-set">
+    <form method="dialog" id="setForm">
+      <div class="dhead"><h2 id="h-set">Connections</h2><button type="button" class="x" id="setClose" aria-label="Close">×</button></div>
+      <p class="muted">Keys are stored in a gitignored <code>.env</code> on this machine and only sent to Google and GitHub.</p>
+      <div class="f">
+        <label for="kGemini">Gemini API key <span class="pillstat" id="sGemini"></span></label>
+        <input id="kGemini" type="password" autocomplete="off" placeholder="Paste a key from aistudio.google.com/apikey">
+        <small>Gemini describes images and writes names and titles. Anything it cannot do falls back to rule-based heuristics.</small>
+      </div>
+      <div class="f">
+        <label for="kGithub">GitHub token <span class="pillstat" id="sGithub"></span></label>
+        <input id="kGithub" type="password" autocomplete="off" placeholder="ghp_… or a fine-grained token">
+        <small>Needs <b>Contents</b> and <b>Pull requests</b> write access (classic token: <code>repo</code>). If you cannot push to the repo, Accessify raises the PR from a fork.</small>
+      </div>
+      <p id="setErr" class="err" role="alert" hidden></p>
+      <div class="dfoot"><button type="button" class="btn soft" id="setCancel">Close</button><button type="submit" class="btn primary" id="setSave">Save &amp; verify</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

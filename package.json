@@ -1,0 +1,17 @@
+{
+  "name": "accessify",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Agent that finds and fixes web accessibility bugs, verifies each fix with a re-scan, and opens a PR.",
+  "scripts": {
+    "start": "node src/server.ts",
+    "demo": "node src/cli.ts demo",
+    "test": "node --test test/core.test.ts"
+  },
+  "dependencies": {
+    "axe-core": "^4.14.0",
+    "parse5": "^8.0.1",
+    "playwright-core": "^1.64.1"
+  }
+}

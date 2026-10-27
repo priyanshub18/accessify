@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Brightleaf Coffee | Small-batch roasters</title>
   <link rel="stylesheet" href="style.css">
+  <style data-accessify>
+    .a11y-text-776b5e { color: #776b5e !important; }
+    .a11y-bg-9d6513 { background-color: #9d6513 !important; }
+    .a11y-text-727272 { color: #727272 !important; }
+    .a11y-text-bd8427 { color: #bd8427 !important; }
+    .a11y-text-84694f { color: #84694f !important; }
+    .a11y-text-7b6c5d { color: #7b6c5d !important; }
+    .a11y-underline { text-decoration: underline !important; }
+  </style>
 </head>
 <body>
   <header>
@@ -15,8 +24,8 @@
       <a href="#visit">Visit</a>
     </nav>
     <div class="tools">
-      <button class="icon-btn" tabindex="3"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
-      <button class="icon-btn" tabindex="2"><svg viewBox="0 0 24 24"><path d="M6 6h15l-2 9H8z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg></button>
+      <button class="icon-btn" aria-label="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <button class="icon-btn" aria-label="Shopping cart"><svg viewBox="0 0 24 24"><path d="M6 6h15l-2 9H8z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg></button>
     </div>
   </header>
 
@@ -24,33 +33,33 @@
     <section class="hero">
       <div>
         <h1>Coffee roasted this morning, at your door by noon.</h1>
-        <p class="lead">Small-batch beans from farms we know by name, roasted twice a week in Delhi.</p>
-        <a class="btn" href="menu.html">Order beans</a>
+        <p class="lead a11y-text-776b5e">Small-batch beans from farms we know by name, roasted twice a week in Delhi.</p>
+        <a class="btn a11y-bg-9d6513" href="menu.html">Order beans</a>
       </div>
-      <img src="img/hero.svg">
+      <img src="img/hero.svg" alt="Hero">
     </section>
 
-    <img class="divider" src="img/divider.svg">
+    <img class="divider" src="img/divider.svg" alt="">
 
     <section class="section">
       <h2>This week's roasts</h2>
       <div class="cards">
-        <div class="card"><h3>Nilgiri Sunrise</h3><p>Chocolate, orange peel and a soft finish. Great for pour-over.</p><span class="price">₹520</span></div>
-        <div class="card"><h3>Coorg Dusk</h3><p>Dark and syrupy with notes of toasted almond and cocoa.</p><span class="price">₹560</span></div>
-        <div class="card"><h3>Araku Bloom</h3><p>Bright and floral, with a clean jasmine aroma.</p><span class="price">₹610</span></div>
+        <div class="card"><h3>Nilgiri Sunrise</h3><p class="a11y-text-727272">Chocolate, orange peel and a soft finish. Great for pour-over.</p><span class="price a11y-text-bd8427">₹520</span></div>
+        <div class="card"><h3>Coorg Dusk</h3><p class="a11y-text-727272">Dark and syrupy with notes of toasted almond and cocoa.</p><span class="price a11y-text-bd8427">₹560</span></div>
+        <div class="card"><h3>Araku Bloom</h3><p class="a11y-text-727272">Bright and floral, with a clean jasmine aroma.</p><span class="price a11y-text-bd8427">₹610</span></div>
       </div>
     </section>
 
     <section class="section" id="visit">
       <h2>Meet the roasters</h2>
       <div class="team">
-        <img src="img/team.svg">
+        <img src="img/team.svg" alt="Team">
         <div>
           <p>We started in a garage in Hauz Khas with one second-hand roaster and a lot of opinions.
-          Today we roast for over 4,000 homes. <a href="menu.html" class="inline">Read what is on the menu</a> or
+          Today we roast for over 4,000 homes. <a href="menu.html" class="inline a11y-underline">Read what is on the menu</a> or
           stop by the roastery on Saturday mornings.</p>
           <h4>Wholesale</h4>
-          <p class="note">Questions about wholesale? <a href="mailto:hello@brightleaf.example">hello@brightleaf.example</a></p>
+          <p class="note">Questions about wholesale? <a href="mailto:hello@brightleaf.example" class="a11y-text-84694f">hello@brightleaf.example</a></p>
         </div>
       </div>
     </section>
@@ -59,13 +68,13 @@
   <section class="news">
     <h2>Get roast alerts</h2>
     <input type="email" placeholder="Your email address" autocomplete="email-address">
-    <select name="freq"><option>Weekly</option><option>Monthly</option></select>
-    <button class="btn" type="button">Subscribe</button>
+    <select name="freq" aria-label="Frequency"><option>Weekly</option><option>Monthly</option></select>
+    <button class="btn a11y-bg-9d6513" type="button">Subscribe</button>
   </section>
 
   <footer>
-    <span>© 2026 Brightleaf Coffee Roasters</span>
-    <a class="social" href="https://instagram.example/brightleaf"><svg viewBox="0 0 24 24"><path d="M7 3h10a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4zm5 5a4 4 0 100 8 4 4 0 000-8z"/></svg></a>
+    <span class="a11y-text-7b6c5d">© 2026 Brightleaf Coffee Roasters</span>
+    <a class="social" href="https://instagram.example/brightleaf" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M7 3h10a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4zm5 5a4 4 0 100 8 4 4 0 000-8z"/></svg></a>
   </footer>
 </body>
 </html>

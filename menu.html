@@ -1,25 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
+  <title>Menu</title>
+  <style data-accessify>
+    .a11y-text-7c5e25 { color: #7c5e25 !important; }
+    .a11y-text-776d5e { color: #776d5e !important; }
+    .a11y-text-90641e { color: #90641e !important; }
+    .a11y-bg-9b6b10 { background-color: #9b6b10 !important; }
+  </style>
 </head>
 <body>
   <header>
     <a class="logo" href="index.html">Brightleaf</a>
     <nav><a href="index.html">Home</a> <a href="menu.html">Menu</a></nav>
-    <div class="tools"><button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M6 6h15l-2 9H8z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg></button></div>
+    <div class="tools"><button class="icon-btn" aria-label="Shopping cart"><svg viewBox="0 0 24 24"><path d="M6 6h15l-2 9H8z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg></button></div>
   </header>
   <main class="section">
     <h1 style="color:#5b3a29;font-size:44px;margin-top:0">Menu</h1>
     <ul class="menu-list">
-      <li><div><strong>Flat white</strong> <span class="tag">bestseller</span><div class="desc">Double ristretto, silky milk.</div></div><span class="price">₹180</span></li>
-      <li><div><strong>Cold brew</strong><div class="desc">Steeped 18 hours, served over ice.</div></div><span class="price">₹210</span></li>
-      <li><div><strong>Cardamom latte</strong> <span class="tag">new</span><div class="desc">House-ground cardamom, jaggery.</div></div><span class="price">₹200</span></li>
+      <li><div><strong>Flat white</strong> <span class="tag a11y-text-7c5e25">bestseller</span><div class="desc a11y-text-776d5e">Double ristretto, silky milk.</div></div><span class="price a11y-text-90641e">₹180</span></li>
+      <li><div><strong>Cold brew</strong><div class="desc a11y-text-776d5e">Steeped 18 hours, served over ice.</div></div><span class="price a11y-text-90641e">₹210</span></li>
+      <li><div><strong>Cardamom latte</strong> <span class="tag a11y-text-7c5e25">new</span><div class="desc a11y-text-776d5e">House-ground cardamom, jaggery.</div></div><span class="price a11y-text-90641e">₹200</span></li>
     </ul>
     <p style="margin-top:32px"><label>Order notes</label><br><input type="text" name="notes" placeholder="Allergies, extra shots..." style="padding:10px;width:320px"></p>
-    <a class="btn" href="#" style="background:#f0c36d;color:#fff">Checkout</a>
+    <a class="btn a11y-bg-9b6b10" href="#" style="background:#f0c36d;color:#fff">Checkout</a>
   </main>
 </body>
 </html>
